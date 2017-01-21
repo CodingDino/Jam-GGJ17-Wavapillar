@@ -23,11 +23,14 @@ public class CaterpillerMovement : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
+		Rigidbody2D body = GetComponent<Rigidbody2D>();
+		body.AddForce(100f*(new Vector2(Random.Range(0f,1f),Random.Range(0f,1f))).normalized);
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		if (Time.timeScale == 0)
+			return;
 
 		Rigidbody2D body = GetComponent<Rigidbody2D>();
 

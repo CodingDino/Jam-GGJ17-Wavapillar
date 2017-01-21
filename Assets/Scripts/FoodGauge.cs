@@ -26,7 +26,8 @@ public class FoodGauge : MonoBehaviour{
 		{
 			++currentFood;
 			guage.localScale = new Vector2((float)currentFood / (float)maxFood,1);
-			// TODO: DO something if you win!
+			if (currentFood == maxFood)
+				Events.Raise(new GameWon(player));
 		}
 	}
 }

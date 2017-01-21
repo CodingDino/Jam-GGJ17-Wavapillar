@@ -23,7 +23,6 @@ public class Food : MonoBehaviour {
 
 	public GameObject particlePrefab;
 
-
 	// Use this for initialization
 	void Start () {
 	}
