@@ -45,7 +45,9 @@ public class CatepillarDeath : MonoBehaviour {
 				{
 					movement.enabled = false;
 				}
+				segments[i].transform.SetParent(null);
 			}
+			Destroy(gameObject);
 		}
 	}
 }
