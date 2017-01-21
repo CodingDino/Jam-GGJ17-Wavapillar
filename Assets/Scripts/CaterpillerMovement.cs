@@ -31,6 +31,11 @@ public class CaterpillerMovement : MonoBehaviour {
 
 		Rigidbody2D body = GetComponent<Rigidbody2D>();
 
+		float joyX = Input.GetAxis(XAxis);
+		float joyY = Input.GetAxis(YAxis);
+
+		Vector2 movement = new Vector2(joyX, -joyY);
+
 		if (Input.GetAxis(GripAxis) > 0)
 		{
 			if (gripping || CanGrip())
@@ -57,17 +62,12 @@ public class CaterpillerMovement : MonoBehaviour {
 		if (!gripping)
 		{
 			body.isKinematic = false;
-
-			float joyX = Input.GetAxis(XAxis);
-			float joyY = Input.GetAxis(YAxis);
-
-			Vector2 movement = new Vector2(joyX, -joyY);
+			body.sharedMaterial.friction = otherHead.gripping ? 0.0f: 1.0f;
 			Vector2 otherHeadDirection = (otherHead.transform.position-transform.position).normalized;
 			float movementInOtherHeadDirection = Vector2.Dot(movement,otherHeadDirection);
 
 			if (movementInOtherHeadDirection/movement.magnitude > inchEffectThreshold && otherHead.gripping && CanGrip())
 			{
-				Debug.Log("INCH EFFECT INVOKED!");
 				float center = BodyColliders.Count/2;
 				Vector2 collisionNormal = otherHead.gripCollision.contacts[0].normal;
 
@@ -91,6 +91,12 @@ public class CaterpillerMovement : MonoBehaviour {
 		}
 
 
+		if (movement.sqrMagnitude > 0)
+		{
+			float angle = Mathf.Atan2(movement.y, movement.x) * Mathf.Rad2Deg - 90f;
+			Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
+			transform.localRotation = q;
+		}
 	}
 
 	private bool CanGrip()
