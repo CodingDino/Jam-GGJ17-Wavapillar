@@ -12,9 +12,12 @@ public class CaterpillerMovement : MonoBehaviour {
 	public float forceMultNoGrip = 10.0f;
 	public List<string> GripColliders = new List<string>();
 	public CaterpillerMovement otherHead;
+	public List<ColliderList> BodyColliders = new List<ColliderList>();
 
 	private bool gripping = false;
-
+	private GameObject gripped = null;
+	private Collision2D gripCollision = null;
+	private Vector3 gripOffset = Vector2.zero;
 
 	// Use this for initialization
 	void Start () {
@@ -30,10 +33,18 @@ public class CaterpillerMovement : MonoBehaviour {
 		{
 			if (gripping || CanGrip())
 			{
-				gripping = true;
+				if (!gripping)
+				{
+					gripping = true;
+					gripCollision = GetGripCollision();
+					gripped = gripCollision.collider.gameObject;
+					gripOffset = transform.position - gripped.transform.position;
+				}
+
 				body.isKinematic = true;
 				body.velocity = Vector2.zero;
 				body.angularVelocity = 0.0f;
+				transform.position = gripped.transform.position + gripOffset;
 			}
 		}
 		else
@@ -66,6 +77,32 @@ public class CaterpillerMovement : MonoBehaviour {
 		return false;
 	}
 
+	private GameObject GetGrippedObject()
+	{
+		ColliderList colliders = GetComponent<ColliderList>();
+
+		for (int i = 0; i < GripColliders.Count; ++i)
+		{
+			GameObject collided = colliders.GetColliderWithTag(GripColliders[i]);
+			if (collided != null)
+				return collided;
+		}
+		return null;
+	}
+
+	private Collision2D GetGripCollision()
+	{
+		ColliderList colliders = GetComponent<ColliderList>();
+
+		for (int i = 0; i < GripColliders.Count; ++i)
+		{
+			Collision2D collision = colliders.GetCollisionWithTag(GripColliders[i]);
+			if (collision != null)
+				return collision;
+		}
+		return null;
+	}
+
 	private float GetForceMult()
 	{
 		if (otherHead.gripping)
@@ -77,10 +114,14 @@ public class CaterpillerMovement : MonoBehaviour {
 		}
 		else
 		{
-			//if(bodytouchingenvironment)
-			return forceMultNoGrip;
-			//else
-			//return 0;
+			for (int i = 0; i < BodyColliders.Count; ++i)
+			{
+				if (BodyColliders[i].IsCollidingWithTag("Environment"))
+				{
+					return forceMultNoGrip;
+				}
+			}
+			return 0;
 		}
 	}
 }
