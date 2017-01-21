@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CaterpillerMovement : MonoBehaviour {
 
+	public int player = 0;
 	public string XAxis = "Horizontal";
 	public string YAxis = "Vertical";
 	public string GripAxis = "Grip";
@@ -21,10 +22,15 @@ public class CaterpillerMovement : MonoBehaviour {
 	private Collision2D gripCollision = null;
 	private Vector3 gripOffset = Vector2.zero;
 
+	public string SelfDestructButton = "";
+	public float SelfDestructDuration;
+	private bool SelfDestructing = false;
+	private float SelfDestructStart = 0;
+
 	// Use this for initialization
 	void Start () {
 		Rigidbody2D body = GetComponent<Rigidbody2D>();
-		body.AddForce(100f*(new Vector2(Random.Range(0f,1f),Random.Range(0f,1f))).normalized);
+		body.AddForce(100f*(new Vector2(Random.Range(-1f,1f),Random.Range(-1f,1f))).normalized);
 	}
 	
 	// Update is called once per frame
@@ -38,6 +44,43 @@ public class CaterpillerMovement : MonoBehaviour {
 		float joyY = Input.GetAxis(YAxis);
 
 		Vector2 movement = new Vector2(joyX, -joyY);
+
+		if (Input.GetButton(SelfDestructButton))
+		{
+			if (!SelfDestructing)
+			{
+				SelfDestructing = true;
+				SelfDestructStart = Time.time;
+			}
+			float timeLeft = SelfDestructDuration;
+			if (otherHead.SelfDestructing)
+			{
+				Debug.Log("Both Destructing");
+				timeLeft = Mathf.Max(SelfDestructStart + SelfDestructDuration - Time.time, 
+									otherHead.SelfDestructStart + otherHead.SelfDestructDuration - Time.time);
+			}
+			else
+			{
+				Debug.Log("One Destructing");
+			}
+
+			if (timeLeft <= 0)
+			{
+				Debug.Log("SELF DESTRUCT");
+				Events.Raise(new PlayerKilled(player));
+			}
+			else
+			{
+				// SHAKE EFFECT
+				transform.Translate(new Vector2(Random.Range(-1f,1f),Random.Range(-1f,1f)).normalized*0.1f);
+				//body.AddForce(20f*(new Vector2(Random.Range(-1f,1f),Random.Range(-1f,1f))).normalized);
+			}
+			return;
+		}
+		else
+		{
+			SelfDestructing = false;
+		}
 
 		if (Input.GetAxis(GripAxis) > 0)
 		{
