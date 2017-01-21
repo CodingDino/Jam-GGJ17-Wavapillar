@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameWon : GameEvent
 {
@@ -51,7 +52,7 @@ public class GameManager : MonoBehaviour {
 				Debug.Log("START BUTTON PRESSED: "+PauseButtons[i]);
 				if (gameOvered)
 				{
-					// TODO: GO TO TITLE
+					SceneManager.LoadScene("Title");
 				}
 				else
 				{

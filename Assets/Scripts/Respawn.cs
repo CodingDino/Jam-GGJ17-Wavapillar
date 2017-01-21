@@ -9,6 +9,7 @@ public class Respawn : MonoBehaviour {
 	public GameObject caterpillarPrefab;
 	public int player;
 	public float respawnDuration;
+	public bool spawnOnLoad = true;
 
 	private float respawnStart = 0;
 	private bool respawning = false;
@@ -16,7 +17,8 @@ public class Respawn : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
-		StartRespawn();
+		if (spawnOnLoad)
+			StartRespawn();
 	}
 	
 	// Update is called once per frame
@@ -45,7 +47,7 @@ public class Respawn : MonoBehaviour {
 		}
 	}
 
-	private void SpawnPlayer()
+	public void SpawnPlayer()
 	{
 		GameObject player = Instantiate(caterpillarPrefab);
 		player.transform.position = transform.position;
@@ -76,8 +78,8 @@ public class Respawn : MonoBehaviour {
 
 	private void StartRespawn()
 	{
-		egg.SetActive(true);
-		timerText.gameObject.SetActive(true);
+		egg.SetActive(respawnDuration>0);
+		timerText.gameObject.SetActive(respawnDuration>0);
 		timerText.text = ((int)respawnDuration).ToString();
 		timerText.transform.localScale = Vector3.one;
 		respawnStart = Time.time;

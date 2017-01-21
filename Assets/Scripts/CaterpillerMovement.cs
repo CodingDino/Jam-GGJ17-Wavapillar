@@ -47,7 +47,7 @@ public class CaterpillerMovement : MonoBehaviour {
 
 		Vector2 movement = new Vector2(joyX, -joyY);
 
-		if (Input.GetButton(SelfDestructButton))
+		if (Input.GetButton(SelfDestructButton) && !gripping && !otherHead.gripping)
 		{
 			if (!SelfDestructing)
 			{
