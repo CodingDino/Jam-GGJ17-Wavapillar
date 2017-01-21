@@ -1,6 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+public class FoodEaten : GameEvent
+{
+	public int player = 0;
+
+	public FoodEaten(int _player)
+	{
+		player = _player;
+	}
+}
 
 public class Food : MonoBehaviour {
 
@@ -34,6 +43,7 @@ public class Food : MonoBehaviour {
 		{
 			if (otherCollider.gameObject.tag == playerTags[i])
 			{
+				Events.Raise(new FoodEaten(i));
 				Debug.Log("EATEN BY PLAYER "+(i+1));
 				GameObject particles = Instantiate(particlePrefab);
 				particles.transform.position = transform.position;
