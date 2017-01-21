@@ -16,8 +16,12 @@ public class GameWon : GameEvent
 
 public class GameManager : MonoBehaviour {
 
+	public List<string> PauseButtons = new List<string>();
 	public GameObject winScreen;
 	public Text winText;
+	public GameObject pauseScreen;
+	private bool gameOvered = false;
+	private bool paused = false;
 
 	void OnEnable()
 	{
@@ -36,5 +40,33 @@ public class GameManager : MonoBehaviour {
 		Time.timeScale = 0;
 
 		// TODO: play again or main menu
+	}
+
+	void Update()
+	{
+		for (int i = 0; i < PauseButtons.Count; ++i)
+		{
+			if (Input.GetButtonDown(PauseButtons[i]))
+			{
+				Debug.Log("START BUTTON PRESSED: "+PauseButtons[i]);
+				if (gameOvered)
+				{
+					// TODO: GO TO TITLE
+				}
+				else
+				{
+					Pause(!paused);
+				}
+
+			}
+		}
+	}
+
+	void Pause(bool _pause)
+	{
+		Debug.Log("SETTING PAUSE TO "+_pause);
+		paused = _pause;
+		pauseScreen.SetActive(paused);
+		Time.timeScale = paused ? 0 : 1;
 	}
 }

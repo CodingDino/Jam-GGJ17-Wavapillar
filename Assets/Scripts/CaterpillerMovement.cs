@@ -27,6 +27,8 @@ public class CaterpillerMovement : MonoBehaviour {
 	private bool SelfDestructing = false;
 	private float SelfDestructStart = 0;
 
+	public float JointLimit = 0.75f;
+
 	// Use this for initialization
 	void Start () {
 		Rigidbody2D body = GetComponent<Rigidbody2D>();
@@ -102,6 +104,8 @@ public class CaterpillerMovement : MonoBehaviour {
 		}
 		else
 		{
+			if (gripping)
+				Debug.Log("STOP GRIP");
 			gripping = false;
 		}
 
@@ -129,19 +133,19 @@ public class CaterpillerMovement : MonoBehaviour {
 					float force = factor*inchEffectForce;
 					BodyColliders[i].GetComponent<Rigidbody2D>().AddForce(collisionNormal*force);
 					body.AddForce(collisionNormal*force*-1);
+					Debug.Log("INCH WORM EFFECT");
 				}
 			}
 
 
 			body.AddForce(movement* GetForceMult());
-		}
 
-
-		if (movement.sqrMagnitude > 0)
-		{
-			float angle = Mathf.Atan2(movement.y, movement.x) * Mathf.Rad2Deg - 90f;
-			Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
-			transform.localRotation = q;
+			if (movement.sqrMagnitude > 0)
+			{
+				float angle = Mathf.Atan2(movement.y, movement.x) * Mathf.Rad2Deg - 90f;
+				Quaternion q = Quaternion.AngleAxis(angle, Vector3.forward);
+				transform.localRotation = q;
+			}
 		}
 	}
 
@@ -185,6 +189,22 @@ public class CaterpillerMovement : MonoBehaviour {
 
 	private float GetForceMult()
 	{
+		Transform lastTrans = null;
+		// Check if segments are too far apart
+		for (int i = 0; i < BodyColliders.Count; ++i)
+		{
+			Transform thisTrans = BodyColliders[i].transform;
+			if (lastTrans)
+			{
+				if ((lastTrans.position - thisTrans.position).magnitude > JointLimit)
+				{
+					Debug.Log("HINGE EXTENDED");
+					return 0;
+				}
+			}
+			lastTrans = thisTrans;
+		}
+
 		if (otherHead.gripping)
 		{
 			if(transform.position.y < otherHead.transform.position.y + 1)
