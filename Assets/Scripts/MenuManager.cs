@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour {
 
 	public List<string> StartButtons = new List<string>();
 	public List<Respawn> SpawnPoints = new List<Respawn>();
+	public List<SpriteRenderer> SpawnEggs = new List<SpriteRenderer>();
 	public List<Text> SpawnText = new List<Text>();
 	public Text StartText;
 
@@ -28,7 +30,9 @@ public class MenuManager : MonoBehaviour {
 				Debug.Log("START BUTTON PRESSED: "+StartButtons[i]);
 				if (Spawned[i])
 				{
-					// TODO: ENTER GAME
+					PlayerPrefs.SetInt("Player1",Spawned[0] ? 1 : 0);
+					PlayerPrefs.SetInt("Player2",Spawned[1] ? 1 : 0);
+					SceneManager.LoadScene("InGame");
 				}
 				else
 				{
@@ -40,5 +44,26 @@ public class MenuManager : MonoBehaviour {
 
 			}
 		}
+	}
+
+
+	void OnEnable()
+	{
+		Events.AddListener<PlayerKilled>(OnPlayerKilled);
+	}
+
+	void OnDisable()
+	{
+		Events.RemoveListener<PlayerKilled>(OnPlayerKilled);
+	}
+
+	private void OnPlayerKilled(PlayerKilled _event)
+	{
+		Spawned[_event.player] = false;
+		SpawnText[_event.player].gameObject.SetActive(true);
+		SpawnEggs[_event.player].gameObject.SetActive(true);
+
+		if (!Spawned[0] && !Spawned[1])
+			StartText.gameObject.SetActive(false);
 	}
 }

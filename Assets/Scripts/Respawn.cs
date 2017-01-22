@@ -10,6 +10,8 @@ public class Respawn : MonoBehaviour {
 	public int player;
 	public float respawnDuration;
 	public bool spawnOnLoad = true;
+	public bool autorespawn = true;
+	public bool usePrefs = true;
 
 	private float respawnStart = 0;
 	private bool respawning = false;
@@ -70,7 +72,7 @@ public class Respawn : MonoBehaviour {
 
 	private void OnPlayerKilled(PlayerKilled _event)
 	{
-		if (player == _event.player)
+		if (autorespawn && player == _event.player)
 		{
 			StartRespawn();
 		}
@@ -78,6 +80,12 @@ public class Respawn : MonoBehaviour {
 
 	private void StartRespawn()
 	{
+		if (usePrefs && PlayerPrefs.GetInt("Player"+(player+1).ToString())==0)
+		{
+			egg.SetActive(false);
+			return;
+		}
+		
 		egg.SetActive(respawnDuration>0);
 		timerText.gameObject.SetActive(respawnDuration>0);
 		timerText.text = ((int)respawnDuration).ToString();
