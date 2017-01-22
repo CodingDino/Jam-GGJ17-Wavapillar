@@ -21,8 +21,12 @@ public class MenuManager : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-
+	void Update () 
+	{
+		if (Input.GetKey(KeyCode.Escape))
+		{
+			Application.Quit();
+		}
 		for (int i = 0; i < StartButtons.Count; ++i)
 		{
 			if (Input.GetButtonDown(StartButtons[i]))

@@ -18,6 +18,8 @@ public class Respawn : MonoBehaviour {
 	private float respawnStart = 0;
 	private bool respawning = false;
 
+	public List<ParticleSystem> EggShells = new List <ParticleSystem>();
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -54,6 +56,14 @@ public class Respawn : MonoBehaviour {
 
 	public void SpawnPlayer()
 	{
+		if (egg.activeSelf)
+		{
+			for (int i = 0; i < EggShells.Count; ++i)
+			{
+				EggShells[i].Play();
+			}
+		}
+
 		GameObject player = Instantiate(caterpillarPrefab);
 		player.transform.position = transform.position;
 		egg.SetActive(false);

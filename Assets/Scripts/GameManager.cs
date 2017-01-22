@@ -23,6 +23,8 @@ public class GameManager : MonoBehaviour {
 	public GameObject pauseScreen;
 	private bool gameOvered = false;
 	private bool paused = false;
+	public ParticleSystem winParticles;
+	public List<Color> PlayerColors = new List<Color>();
 
 	void OnEnable()
 	{
@@ -38,12 +40,18 @@ public class GameManager : MonoBehaviour {
 	{
 		winScreen.SetActive(true);
 		winText.text = "TEAM "+(_event.player+1)+" WON!";
+		winText.color = PlayerColors[_event.player];
 		Time.timeScale = 0;
 		gameOvered = true;
+		winParticles.Play();
 	}
 
 	void Update()
 	{
+		if (Input.GetKey(KeyCode.Escape))
+		{
+			Application.Quit();
+		}
 		for (int i = 0; i < PauseButtons.Count; ++i)
 		{
 			if (Input.GetButtonDown(PauseButtons[i]))
@@ -51,6 +59,7 @@ public class GameManager : MonoBehaviour {
 				Debug.Log("START BUTTON PRESSED: "+PauseButtons[i]);
 				if (gameOvered)
 				{
+					Time.timeScale = 1.0f;
 					SceneManager.LoadScene("Title");
 				}
 				else
