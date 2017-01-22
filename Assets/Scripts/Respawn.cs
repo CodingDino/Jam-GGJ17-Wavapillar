@@ -13,6 +13,7 @@ public class Respawn : MonoBehaviour {
 	public bool autorespawn = true;
 	public bool usePrefs = true;
 	public AudioSource countAudio;
+	public AudioSource hatchAudio;
 
 	private float respawnStart = 0;
 	private bool respawning = false;
@@ -59,6 +60,7 @@ public class Respawn : MonoBehaviour {
 		timerText.gameObject.SetActive(false);
 		respawnStart = 0;
 		respawning = false;
+		hatchAudio.Play();
 	}
 
 
