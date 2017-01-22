@@ -37,10 +37,9 @@ public class GameManager : MonoBehaviour {
 	private void OnGameWon(GameWon _event)
 	{
 		winScreen.SetActive(true);
-		winText.text = "PLAYER "+(_event.player+1)+" WON!";
+		winText.text = "TEAM "+(_event.player+1)+" WON!";
 		Time.timeScale = 0;
-
-		// TODO: play again or main menu
+		gameOvered = true;
 	}
 
 	void Update()
