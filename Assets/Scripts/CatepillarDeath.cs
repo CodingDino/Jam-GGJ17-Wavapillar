@@ -6,6 +6,7 @@ public class CatepillarDeath : MonoBehaviour {
 
 	public int player;
 	public List<GameObject> segments = new List<GameObject>();
+	public AudioSource deathAudio;
 
 
 	void OnEnable()
@@ -47,6 +48,7 @@ public class CatepillarDeath : MonoBehaviour {
 				}
 				segments[i].transform.SetParent(null);
 			}
+			deathAudio.Play();
 			Destroy(gameObject);
 		}
 	}

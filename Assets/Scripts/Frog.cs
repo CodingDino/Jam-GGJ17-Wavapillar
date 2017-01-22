@@ -8,6 +8,9 @@ public class Frog : MonoBehaviour {
 
 	public float tongueInterval = 5.0f;
 
+	public AudioSource tongueAudio;
+	public AudioSource croakAudio;
+
 	private float lastTongue = 0;
 
 	// Use this for initialization
@@ -21,6 +24,12 @@ public class Frog : MonoBehaviour {
 		{
 			lastTongue = Time.time;
 			animator.SetTrigger("Tongue");
+			tongueAudio.Play();
 		}
+	}
+
+	public void PlayCroak()
+	{
+		croakAudio.Play();
 	}
 }

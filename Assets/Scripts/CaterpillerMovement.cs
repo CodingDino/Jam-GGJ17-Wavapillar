@@ -29,6 +29,8 @@ public class CaterpillerMovement : MonoBehaviour {
 
 	public float JointLimit = 0.75f;
 
+	public AudioSource grabAudio;
+
 	// Use this for initialization
 	void Start () {
 		Rigidbody2D body = GetComponent<Rigidbody2D>();
@@ -94,6 +96,7 @@ public class CaterpillerMovement : MonoBehaviour {
 					gripCollision = GetGripCollision();
 					gripped = gripCollision.collider.gameObject;
 					gripOffset = transform.position - gripped.transform.position;
+					grabAudio.Play();
 				}
 
 				body.isKinematic = true;

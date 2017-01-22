@@ -12,6 +12,7 @@ public class Respawn : MonoBehaviour {
 	public bool spawnOnLoad = true;
 	public bool autorespawn = true;
 	public bool usePrefs = true;
+	public AudioSource countAudio;
 
 	private float respawnStart = 0;
 	private bool respawning = false;
@@ -36,6 +37,7 @@ public class Respawn : MonoBehaviour {
 				{
 					timerText.text = timeString;
 					timerText.transform.localScale = Vector3.one;
+					countAudio.Play();
 				}
 				else
 				{
@@ -88,6 +90,8 @@ public class Respawn : MonoBehaviour {
 		
 		egg.SetActive(respawnDuration>0);
 		timerText.gameObject.SetActive(respawnDuration>0);
+		if (respawnDuration>0)
+			countAudio.Play();
 		timerText.text = ((int)respawnDuration).ToString();
 		timerText.transform.localScale = Vector3.one;
 		respawnStart = Time.time;

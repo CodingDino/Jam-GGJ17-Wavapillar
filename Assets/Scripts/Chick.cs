@@ -5,6 +5,7 @@ using UnityEngine;
 public class Chick : MonoBehaviour {
 
 	public float CycleOffset = 0;
+	public AudioSource cheepAudio;
 
 	// Use this for initialization
 	void Start () {
@@ -14,5 +15,10 @@ public class Chick : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		
+	}
+
+	public void PlayCheep()
+	{
+		cheepAudio.Play();
 	}
 }
